@@ -15,8 +15,8 @@
   <a href="https://t.me/nwcompanynetwork">
     <img src="https://img.shields.io/badge/Telegram-Chat-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
   </a>
-  <a href="https://ble.ir/8RtfHKqmbD">
-    <img src="https://img.shields.io/badge/Bale-Contact-00D48F?style=for-the-badge&logo=messenger&logoColor=white" alt="Bale" />
+  <a href="https://rubika.ir/nwcompany">
+    <img src="https://img.shields.io/badge/Rubika-Contact-00D48F?style=for-the-badge&logo=messenger&logoColor=white" alt="Bale" />
   </a>
 </p>
 
