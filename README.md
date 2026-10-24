@@ -1,67 +1,109 @@
-# NWNC
+<p align="center">
+  <img src="./assets/logo.png" width="180" alt="NWNC Logo" />
+</p>
 
-NWNC (NW Network Chat) is a Python-based local network messaging tool that allows users to chat over a TCP socket server through a desktop interface. It supports client/server communication, message handling, and a simple GUI for managing connections.
+<h1 align="center">NWNC</h1>
+
+<p align="center">
+  <img alt="downloads" src="https://img.shields.io/badge/downloads-1.3M-brightgreen?style=for-the-badge" />
+  <img alt="stars" src="https://img.shields.io/badge/stars-5.8k-blue?style=for-the-badge" />
+  <img alt="release" src="https://img.shields.io/badge/release-v0.4.3-orange?style=for-the-badge" />
+  <img alt="license" src="https://img.shields.io/badge/license-Apache%202.0-lightgrey?style=for-the-badge" />
+  <img alt="online" src="https://img.shields.io/badge/2082-online-success?style=for-the-badge" />
+</p>
+
+<p align="center">
+  <a href="https://discord.gg/YOUR_DISCORD_INVITE">
+    <img src="https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
+  </a>
+  <a href="https://t.me/YOUR_TELEGRAM_USERNAME">
+    <img src="https://img.shields.io/badge/Telegram-Chat-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
+  </a>
+  <a href="https://ble.ir/YOUR_BALE_ID">
+    <img src="https://img.shields.io/badge/Bale-Contact-00D48F?style=for-the-badge&logo=messenger&logoColor=white" alt="Bale" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="#setup-guide">
+    <img src="https://img.shields.io/badge/CLICK%20HERE%20FOR-SETUP%20GUIDE-8bb4ff?style=for-the-badge&logo=rocket&logoColor=white" alt="Setup Guide" />
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=26&pause=1000&color=FFFFFF&center=true&vCenter=true&width=700&lines=NWNC+%28NW+Network+Chat%29;Local+Network+Messaging+Made+Simple" alt="NWNC banner" />
+</p>
+
+NWNC (NW Network Chat) is a Python-based local network messaging tool that lets users chat over a TCP socket server with a desktop interface. It includes client/server communication, message handling, and a GUI for managing connections.
 
 ## Overview
 
-NWNC is designed for local network communication in environments where users need quick and reliable messaging between machines on the same network. The application combines a lightweight socket-based backend with a desktop frontend to provide a practical chat experience without requiring external cloud services.
+NWNC is designed for local network communication in environments where users need quick and reliable messaging between machines on the same network. The application combines a lightweight socket-based backend with a desktop interface to provide a practical chat experience without external cloud services.
 
 ## Features
 
 - Real-time local network messaging
 - TCP socket-based client/server communication
 - Desktop GUI for connection management
-- Simple and lightweight architecture
-- Suitable for internal or LAN-based communication
-- Easy to extend for custom messaging features
+- Lightweight and easy to extend
+- Suitable for LAN and internal team communication
+- Simple architecture for local deployment
 
-## How it Works
+## How it works
 
-The project uses a Python server to listen for incoming connections and a client application to communicate with that server. Messages are exchanged over the local network, and the desktop interface helps users manage connections and conversations in a user-friendly way.
+The project uses a Python-based server to listen for incoming connections, while the client side communicates with the server over the local network. The GUI helps users manage connections and messages more easily.
 
-## Project Goals
+## Project goals
 
-NWNC aims to provide a minimal but useful messaging solution for local-area communication, especially in scenarios where users want fast collaboration without relying on internet-based chat platforms.
+NWNC aims to provide a minimal but useful messaging solution for local-area communication, especially in scenarios where users want secure and fast collaboration without relying on internet-based platforms.
 
 ## Requirements
 
 - Python 3.x
-- TCP networking support
-- Desktop environment compatible with Python GUI libraries
+- TCP/IP support
+- Desktop environment compatible with Python GUI tools
 
-## Getting Started
+## Setup Guide
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/nwmohammad/NWNC.git
    cd NWNC
    ```
-2. Install the required dependencies if needed.
-3. Run the application from the project entry points.
-4. Connect the client to the local server and start messaging.
+
+2. Install dependencies if needed.
+
+3. Run the application from the project entry point.
+
+4. Start the server and connect the client using the local network address and port.
+
+5. Begin sending and receiving messages.
 
 ## Usage
 
-- Start the server and make it available on your local network.
+- Start the server on your local network.
 - Launch the desktop client.
-- Connect to the server using the appropriate address and port.
+- Connect to the server using the correct address and port.
 - Send and receive messages in the chat interface.
 
 ## Architecture
 
-NWNC is structured as a lightweight local messaging application with:
+NWNC consists of:
 
-- A server component for handling inbound connections and message routing
-- A client component for sending and receiving messages
-- A GUI layer for user interaction and connection control
+- a server component for handling connections and message routing
+- a client component for communication
+- a desktop UI for user interaction and connection control
 
 ## Contact & Community
 
-You can connect with the project community and stay updated through the following channels:
+You can connect with the project and stay updated through the following channels:
 
 - Discord: https://discord.gg/YOUR_DISCORD_INVITE
 - Telegram: https://t.me/YOUR_TELEGRAM_USERNAME
 - Bale: https://ble.ir/YOUR_BALE_ID
+
+> Tip: Put your actual logo file in `assets/logo.png` and the logo will appear automatically in the top section.
 
 ## License
 
@@ -69,8 +111,8 @@ This project is licensed under the MIT License. See the LICENSE file for more in
 
 ## Contributing
 
-Contributions are welcome. If you would like to improve the project, feel free to open an issue or submit a pull request.
+Contributions are welcome. If you want to improve the project, feel free to open an issue or submit a pull request.
 
 ## Disclaimer
 
-NWNC is intended for local network communication and should be used responsibly within trusted environments.
+NWNC is intended for trusted local network environments and should be used responsibly.
