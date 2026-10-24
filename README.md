@@ -1,32 +1,23 @@
 <p align="center">
-  <img src="./assets/logo.png" width="180" alt="NWNC Logo" />
+  <img src="./logo/mainlogo.png" width="180" alt="NWNC Logo" />
 </p>
 
 <h1 align="center">NWNC</h1>
 
 <p align="center">
-  <img alt="downloads" src="https://img.shields.io/badge/downloads-1.3M-brightgreen?style=for-the-badge" />
-  <img alt="stars" src="https://img.shields.io/badge/stars-5.8k-blue?style=for-the-badge" />
-  <img alt="release" src="https://img.shields.io/badge/release-v0.4.3-orange?style=for-the-badge" />
-  <img alt="license" src="https://img.shields.io/badge/license-Apache%202.0-lightgrey?style=for-the-badge" />
+  <img alt="release" src="https://img.shields.io/badge/release-v0.1.1-blue?style=for-the-badge" />
   <img alt="online" src="https://img.shields.io/badge/2082-online-success?style=for-the-badge" />
 </p>
 
 <p align="center">
-  <a href="https://discord.gg/YOUR_DISCORD_INVITE">
+  <a href="https://discord.gg/mVXfq6Kw7Y">
     <img src="https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
   </a>
-  <a href="https://t.me/YOUR_TELEGRAM_USERNAME">
+  <a href="https://t.me/nwcompanynetwork">
     <img src="https://img.shields.io/badge/Telegram-Chat-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
   </a>
-  <a href="https://ble.ir/YOUR_BALE_ID">
+  <a href="https://ble.ir/8RtfHKqmbD">
     <img src="https://img.shields.io/badge/Bale-Contact-00D48F?style=for-the-badge&logo=messenger&logoColor=white" alt="Bale" />
-  </a>
-</p>
-
-<p align="center">
-  <a href="#setup-guide">
-    <img src="https://img.shields.io/badge/CLICK%20HERE%20FOR-SETUP%20GUIDE-8bb4ff?style=for-the-badge&logo=rocket&logoColor=white" alt="Setup Guide" />
   </a>
 </p>
 
@@ -57,29 +48,6 @@ The project uses a Python-based server to listen for incoming connections, while
 
 NWNC aims to provide a minimal but useful messaging solution for local-area communication, especially in scenarios where users want secure and fast collaboration without relying on internet-based platforms.
 
-## Requirements
-
-- Python 3.x
-- TCP/IP support
-- Desktop environment compatible with Python GUI tools
-
-## Setup Guide
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/nwmohammad/NWNC.git
-   cd NWNC
-   ```
-
-2. Install dependencies if needed.
-
-3. Run the application from the project entry point.
-
-4. Start the server and connect the client using the local network address and port.
-
-5. Begin sending and receiving messages.
-
 ## Usage
 
 - Start the server on your local network.
@@ -95,15 +63,6 @@ NWNC consists of:
 - a client component for communication
 - a desktop UI for user interaction and connection control
 
-## Contact & Community
-
-You can connect with the project and stay updated through the following channels:
-
-- Discord: https://discord.gg/YOUR_DISCORD_INVITE
-- Telegram: https://t.me/YOUR_TELEGRAM_USERNAME
-- Bale: https://ble.ir/YOUR_BALE_ID
-
-> Tip: Put your actual logo file in `assets/logo.png` and the logo will appear automatically in the top section.
 
 ## License
 
