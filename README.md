@@ -6,7 +6,6 @@
 
 <p align="center">
   <img alt="release" src="https://img.shields.io/badge/release-v0.1.1-blue?style=for-the-badge" />
-  <img alt="online" src="https://img.shields.io/badge/2082-online-success?style=for-the-badge" />
 </p>
 
 <p align="center">
