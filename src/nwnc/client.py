@@ -4,8 +4,10 @@ import socket
 import threading
 from typing import Any, Callable
 
+from .core import MAX_FRAME_SIZE, PORT
 
-DEFAULT_PORT = 5050
+
+DEFAULT_PORT = PORT
 BUFFER_SIZE = 4096
 MAX_MESSAGE_LENGTH = 4000
 
@@ -23,6 +25,9 @@ class ChatClient:
         self._send_lock = threading.Lock()
         self._state_lock = threading.Lock()
         self._connected = False
+        self._connecting = False
+        self._connect_generation = 0
+        self._pending_socket: socket.socket | None = None
         self._receiver_thread: threading.Thread | None = None
 
     @property
@@ -50,9 +55,6 @@ class ChatClient:
         port: int = DEFAULT_PORT,
         timeout: float = 5.0,
     ) -> None:
-        if self.connected:
-            raise RuntimeError("Client is already connected.")
-
         host = host.strip()
 
         if not host:
@@ -61,26 +63,47 @@ class ChatClient:
         if not 1 <= port <= 65535:
             raise ValueError("Port must be between 1 and 65535.")
 
-        client_socket = socket.socket(
-            socket.AF_INET,
-            socket.SOCK_STREAM,
-        )
-        client_socket.settimeout(timeout)
+        with self._state_lock:
+            if self._connected or self._connecting:
+                raise RuntimeError("Client is already connected or connecting.")
+            self._connecting = True
+            self._connect_generation += 1
+            generation = self._connect_generation
+
+        client_socket = None
 
         try:
+            client_socket = socket.socket(
+                socket.AF_INET,
+                socket.SOCK_STREAM,
+            )
+            with self._state_lock:
+                if generation != self._connect_generation:
+                    raise ConnectionError("Connection attempt was cancelled.")
+                self._pending_socket = client_socket
+
+            client_socket.settimeout(timeout)
             client_socket.connect((host, port))
             client_socket.settimeout(None)
-        except OSError:
-            client_socket.close()
-            raise
 
-        with self._state_lock:
-            if self._connected:
+            with self._state_lock:
+                if (
+                    generation != self._connect_generation
+                    or self._pending_socket is not client_socket
+                ):
+                    raise ConnectionError("Connection attempt was cancelled.")
+                self._pending_socket = None
+                self._connecting = False
+                self._socket = client_socket
+                self._connected = True
+        except BaseException:
+            if client_socket is not None:
                 client_socket.close()
-                raise RuntimeError("Client is already connected.")
-
-            self._socket = client_socket
-            self._connected = True
+            with self._state_lock:
+                if generation == self._connect_generation:
+                    self._pending_socket = None
+                    self._connecting = False
+            raise
 
         self._notify_status(f"Connected to {host}:{port}")
 
@@ -154,8 +177,14 @@ class ChatClient:
 
             buffer += data
 
+            oversized_message = False
             while b"\n" in buffer:
                 line, buffer = buffer.split(b"\n", 1)
+
+                if len(line) > MAX_FRAME_SIZE:
+                    self._notify_status("Received an oversized server message.")
+                    oversized_message = True
+                    break
 
                 if not line.strip():
                     continue
@@ -169,34 +198,45 @@ class ChatClient:
                 if isinstance(message, dict):
                     self._notify_message(message)
 
-        was_connected = self.connected
-        self._mark_disconnected()
+            if oversized_message:
+                break
+
+            if len(buffer) > MAX_FRAME_SIZE:
+                self._notify_status("Received an oversized server message.")
+                break
+
+        was_connected = self._mark_disconnected()
 
         if was_connected:
             self._notify_status("Disconnected from server.")
 
-    def _mark_disconnected(self) -> None:
+    def _mark_disconnected(self) -> bool:
         with self._state_lock:
+            was_connected = self._connected
+            self._connect_generation += 1
+            self._connecting = False
             self._connected = False
             client_socket = self._socket
+            pending_socket = self._pending_socket
             self._socket = None
+            self._pending_socket = None
 
-        if client_socket is not None:
+        for current_socket in (client_socket, pending_socket):
+            if current_socket is None:
+                continue
             try:
-                client_socket.shutdown(socket.SHUT_RDWR)
+                current_socket.shutdown(socket.SHUT_RDWR)
             except OSError:
                 pass
 
             try:
-                client_socket.close()
+                current_socket.close()
             except OSError:
                 pass
+        return was_connected
 
     def disconnect(self) -> None:
-        was_connected = self.connected
-        self._mark_disconnected()
-
-        if was_connected:
+        if self._mark_disconnected():
             self._notify_status("Disconnected from server.")
 
     def __enter__(self) -> "ChatClient":

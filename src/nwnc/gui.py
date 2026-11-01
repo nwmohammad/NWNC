@@ -6,7 +6,7 @@ from pathlib import Path
 
 import customtkinter as ctk
 
-from .core import get_app_info
+from .core import PORT, get_app_info
 from .client import ChatClient
 from .server import ChatServer
 
@@ -14,7 +14,7 @@ from .server import ChatServer
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
-DEFAULT_PORT = 5050
+DEFAULT_PORT = PORT
 
 
 class NWNCWindow:
@@ -564,7 +564,10 @@ class NWNCWindow:
 
         client = ChatClient(
             on_message=self.network_message_callback,
-            on_status=self.network_status_callback,
+            on_status=lambda status: self.network_status_callback(
+                client,
+                status,
+            ),
         )
         self.client = client
 
@@ -663,11 +666,16 @@ class NWNCWindow:
         elif kind == "error":
             self.log(f"[CLIENT ERROR] {text}")
 
-    def network_status_callback(self, status):
-        self._safe_after(lambda value=status: self.handle_network_status(value))
+    def network_status_callback(self, client, status):
+        self._safe_after(
+            lambda source=client, value=status: self.handle_network_status(
+                source,
+                value,
+            )
+        )
 
-    def handle_network_status(self, status):
-        if self.closing:
+    def handle_network_status(self, client, status):
+        if self.closing or client is not self.client:
             return
 
         text = str(status)

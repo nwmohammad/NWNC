@@ -5,7 +5,7 @@
 <h1 align="center">NWNC</h1>
 
 <p align="center">
-  <img alt="release" src="https://img.shields.io/badge/release-v0.1.1-blue?style=for-the-badge" />
+  <img alt="release" src="https://img.shields.io/badge/release-v0.1.2-blue?style=for-the-badge" />
 </p>
 
 <p align="center">

@@ -2,12 +2,21 @@
 import json
 import socket
 import threading
+from dataclasses import dataclass, field
 from typing import Any, Callable
 
+from .core import HOST, MAX_FRAME_SIZE, PORT
 
-DEFAULT_HOST = "0.0.0.0"
-DEFAULT_PORT = 5050
+
+DEFAULT_HOST = HOST
+DEFAULT_PORT = PORT
 BUFFER_SIZE = 4096
+
+
+@dataclass
+class ClientConnection:
+    address: tuple[str, int]
+    send_lock: Any = field(default_factory=threading.Lock)
 
 
 class ChatServer:
@@ -22,7 +31,7 @@ class ChatServer:
         self.on_log = on_log
 
         self.server_socket: socket.socket | None = None
-        self.clients: dict[socket.socket, tuple[str, int]] = {}
+        self.clients: dict[socket.socket, ClientConnection] = {}
         self.clients_lock = threading.Lock()
         self.running = threading.Event()
 
@@ -77,7 +86,10 @@ class ChatServer:
                 break
 
             with self.clients_lock:
-                self.clients[client_socket] = address
+                if not self.running.is_set():
+                    client_socket.close()
+                    break
+                self.clients[client_socket] = ClientConnection(address)
 
             self._log(f"[CONNECTED] {address[0]}:{address[1]}")
 
@@ -114,6 +126,11 @@ class ChatServer:
 
                 while b"\n" in buffer:
                     line, buffer = buffer.split(b"\n", 1)
+                    if len(line) > MAX_FRAME_SIZE:
+                        self._log(
+                            f"[WARN] Oversized message from {address[0]}."
+                        )
+                        return
                     if not line.strip():
                         continue
 
@@ -154,20 +171,25 @@ class ChatServer:
                         f"({address[0]}): {text[:200]}"
                     )
                     self._broadcast(outgoing)
+                if len(buffer) > MAX_FRAME_SIZE:
+                    self._log(
+                        f"[WARN] Oversized message from {address[0]}."
+                    )
+                    break
 
         except OSError as exc:
             if self.running.is_set():
                 self._log(f"[CLIENT ERROR] {address}: {exc}")
         finally:
             with self.clients_lock:
-                was_connected = self.clients.pop(client_socket, None) is not None
+                connection = self.clients.pop(client_socket, None)
 
             try:
                 client_socket.close()
             except OSError:
                 pass
 
-            if was_connected:
+            if connection is not None:
                 self._log(f"[DISCONNECTED] {address[0]}:{address[1]}")
 
     def _send_to_client(
@@ -179,20 +201,31 @@ class ChatServer:
             json.dumps(message, ensure_ascii=False) + "\n"
         ).encode("utf-8")
 
+        with self.clients_lock:
+            connection = self.clients.get(client_socket)
+
+        if connection is None:
+            return False
+
         try:
-            client_socket.sendall(payload)
+            with connection.send_lock:
+                client_socket.sendall(payload)
             return True
         except OSError:
             return False
 
     def _broadcast(self, message: dict[str, Any]) -> None:
         with self.clients_lock:
-            recipients = list(self.clients.keys())
+            recipients = list(self.clients.items())
 
-        for client_socket in recipients:
+        for client_socket, connection in recipients:
             if not self._send_to_client(client_socket, message):
                 with self.clients_lock:
-                    address = self.clients.pop(client_socket, None)
+                    if self.clients.get(client_socket) is connection:
+                        self.clients.pop(client_socket)
+                        address = connection.address
+                    else:
+                        address = None
 
                 try:
                     client_socket.shutdown(socket.SHUT_RDWR)
